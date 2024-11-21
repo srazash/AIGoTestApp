@@ -13,7 +13,8 @@ func Run() {
 		panic(err)
 	}
 
+	fmt.Printf("%d models(s):\n", len(m.Models))
 	for _, mo := range m.Models {
-		fmt.Println(mo)
+		fmt.Printf("\t%s (%d)\n", mo.Name, mo.Size)
 	}
 }
