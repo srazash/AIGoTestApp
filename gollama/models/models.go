@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -59,4 +60,14 @@ func Init(settings *settings.Settings) (*Models, error) {
 	}
 
 	return models, nil
+}
+
+func (m *Models) ModelNames() *[]string {
+	modelnames := make([]string, len(m.Models))
+
+	for i, mo := range m.Models {
+		modelnames[i] = strings.Split(mo.Name, ":")[0]
+	}
+
+	return &modelnames
 }
