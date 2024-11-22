@@ -15,7 +15,7 @@ func Run() {
 
 	fmt.Printf("%d models(s):\n", len(m.Models))
 	for _, mo := range m.Models {
-		fmt.Printf("\t%s (%d)\n", mo.Name, mo.Size)
+		fmt.Printf("\t%s (%.02f GB)\n", mo.Name, models.ToGB(mo.Size))
 	}
 
 	for _, mn := range *m.ModelNames() {
