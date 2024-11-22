@@ -2,9 +2,13 @@ package request
 
 import (
 	"aigotestapp/gollama/settings"
+	"bufio"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -39,11 +43,17 @@ func Init(model string, prompt string, suffix string) (*Request, error) {
 	}, nil
 }
 
-func (r *Request) Generate(ch chan<- string, settings *settings.Settings) error {
+func (r *Request) Generate(ch chan string, settings *settings.Settings) error {
 	server := settings.GetConnectionString()
 	url := fmt.Sprintf("http://%s/api/generate", server)
 
-	request, err := http.NewRequest(http.MethodPost, url, nil)
+	payloadString, err := json.Marshal(settings)
+	if err != nil {
+		return err
+	}
+	payload := strings.NewReader(string(payloadString))
+
+	request, err := http.NewRequest(http.MethodPost, url, payload)
 	if err != nil {
 		return err
 	}
@@ -54,14 +64,34 @@ func (r *Request) Generate(ch chan<- string, settings *settings.Settings) error 
 	request.Header.Add("format", "json")
 
 	client := &http.Client{}
-
 	response, err := client.Do(request)
 	if err != nil {
 		return err
 	}
 	defer response.Body.Close()
 
-	// TODO
+	if response.StatusCode != http.StatusOK {
+		log.Println(response)
+		panic(response.Status)
+	}
+
+	scanner := bufio.NewScanner(response.Body)
+	for scanner.Scan() {
+		data := Response{}
+		err := json.Unmarshal([]byte(scanner.Text()), &data)
+		if err != nil {
+			return err
+		}
+		ch <- data.Response
+
+		if data.Done {
+			close(ch)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
 
 	return nil
 }
