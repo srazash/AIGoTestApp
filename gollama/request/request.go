@@ -47,7 +47,7 @@ func (r *Request) Generate(ch chan string, settings *settings.Settings) error {
 	server := settings.GetConnectionString()
 	url := fmt.Sprintf("http://%s/api/generate", server)
 
-	payloadString, err := json.Marshal(settings)
+	payloadString, err := json.Marshal(r)
 	if err != nil {
 		return err
 	}
@@ -57,11 +57,6 @@ func (r *Request) Generate(ch chan string, settings *settings.Settings) error {
 	if err != nil {
 		return err
 	}
-
-	request.Header.Add("model", r.Model)
-	request.Header.Add("prompt", r.Prompt)
-	request.Header.Add("suffix", r.Suffix)
-	request.Header.Add("format", "json")
 
 	client := &http.Client{}
 	response, err := client.Do(request)
