@@ -1,7 +1,7 @@
 package models
 
 import (
-	"aigotestapp/gollama/settings"
+	"aigotestapp/ollama/settings"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -33,7 +33,7 @@ type Models struct {
 }
 
 func Init(settings *settings.Settings) (*Models, error) {
-	server := settings.GetConnectionString()
+	server := settings.ConnectionString()
 	url := fmt.Sprintf("http://%s/api/tags", server)
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)

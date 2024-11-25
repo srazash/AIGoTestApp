@@ -1,7 +1,7 @@
 package request
 
 import (
-	"aigotestapp/gollama/settings"
+	"aigotestapp/ollama/settings"
 	"bufio"
 	"encoding/json"
 	"errors"
@@ -44,7 +44,7 @@ func Init(model string, prompt string, suffix string) (*Request, error) {
 }
 
 func (r *Request) Generate(ch chan string, settings *settings.Settings) error {
-	server := settings.GetConnectionString()
+	server := settings.ConnectionString()
 	url := fmt.Sprintf("http://%s/api/generate", server)
 
 	payloadString, err := json.Marshal(r)

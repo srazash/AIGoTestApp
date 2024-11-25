@@ -1,7 +1,7 @@
 package main
 
-import "aigotestapp/gollama"
+import "aigotestapp/ollama"
 
 func main() {
-	gollama.Run()
+	ollama.Run()
 }

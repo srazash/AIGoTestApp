@@ -1,14 +1,14 @@
-package gollama
+package ollama
 
 import (
-	"aigotestapp/gollama/models"
-	"aigotestapp/gollama/request"
-	"aigotestapp/gollama/settings"
+	"aigotestapp/ollama/models"
+	"aigotestapp/ollama/request"
+	"aigotestapp/ollama/settings"
 	"fmt"
 )
 
 func Run() {
-	s := settings.Init("localhost", 11434)
+	s := settings.LoadAndInit()
 	m, err := models.Init(s)
 	if err != nil {
 		panic(err)
